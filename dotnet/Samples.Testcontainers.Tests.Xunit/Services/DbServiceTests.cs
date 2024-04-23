@@ -7,7 +7,7 @@ namespace Samples.Testcontainers.Tests.Xunit.Services;
 public sealed class DbServiceTests : IClassFixture<PostgresTestFixture>, IDisposable
 {
     private readonly PostgresTestFixture _dbFixture;
-    private readonly DbService _db = null!;
+    private readonly DbService _db;
 
     public DbServiceTests(PostgresTestFixture dbFixture)
     {
