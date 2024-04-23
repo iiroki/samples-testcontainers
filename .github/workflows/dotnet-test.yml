@@ -19,9 +19,6 @@ jobs:
       with:
         global-json-file: dotnet/global.json
 
-    - name: 'Restore tools'
-      run: 'dotnet tool restore'
-
     - name: 'Restore dependencies'
       run: dotnet restore
 

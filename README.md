@@ -21,9 +21,9 @@ The samples in the repository depend on the following tools:
 
 The sample .NET solution consist of three projects:
 
-- [`Samples.Testcontainers`](./dotnet/Samples.Testcontainers/): The project that's tested
-- [`Samples.Testcontainers.Tests.Nunit`](./dotnet/Samples.Testcontainers.Tests.Nunit/): [NUnit](https://nunit.org/) samples
-- [`Samples.Testcontainers.Tests.Xunit`](./dotnet/Samples.Testcontainers.Tests.Xunit/): [xUnit](https://xunit.net/) samples
+- **[`Samples.Testcontainers`](./dotnet/Samples.Testcontainers/):** The project that's tested
+- **[`Samples.Testcontainers.Tests.Nunit`](./dotnet/Samples.Testcontainers.Tests.Nunit/):** [NUnit](https://nunit.org/) samples
+- **[`Samples.Testcontainers.Tests.Xunit`](./dotnet/Samples.Testcontainers.Tests.Xunit/):** [xUnit](https://xunit.net/) samples
 
 Only test projects have references to the tested project, not the other way around!
 
@@ -59,3 +59,7 @@ The repository also demonstrates how to use Testcontainers in CI pipelines with 
 Integration Testcontainers to CI pipelines is as almost as easy it can get,
 since the tests can just be executed with the chosen language's standard test commands
 without any extra configuration!
+
+The GitHub Actions CI pipelines are located under [`.github/workflows`](./.github/workflows/):
+- **[`dotnet-test.yml`](./.github/workflows/dotnet-test.yml):** .NET CI pipeline
+- TODO: Node CI
