@@ -4,8 +4,11 @@ on: [push]
 
 jobs:
   build:
-    name: 'Build'
+    name: 'Test'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dotnet/
 
     steps:
     - name: 'Checkout'
@@ -18,9 +21,6 @@ jobs:
 
     - name: 'Restore tools'
       run: 'dotnet tool restore'
-
-    - name: 'CSharpier check'
-      run: dotnet dotnet-csharpier --check .
 
     - name: 'Restore dependencies'
       run: dotnet restore
