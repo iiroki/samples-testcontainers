@@ -2,7 +2,7 @@ using Samples.Testcontainers.Models;
 using Samples.Testcontainers.Services;
 using Samples.Testcontainers.Tests.Xunit.Testcontainers;
 
-namespace Samples.Testcontainers.Tests.XUnit.Services;
+namespace Samples.Testcontainers.Tests.Xunit.Services;
 
 public sealed class DbServiceTests : IClassFixture<PostgresTestFixture>, IDisposable
 {

@@ -1,0 +1,32 @@
+name: '.NET Test'
+
+on: [push]
+
+jobs:
+  build:
+    name: 'Build'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Checkout'
+      uses: actions/checkout@v3
+
+    - name: 'Setup .NET'
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: dotnet/global.json
+
+    - name: 'Restore tools'
+      run: 'dotnet tool restore'
+
+    - name: 'CSharpier check'
+      run: dotnet dotnet-csharpier --check .
+
+    - name: 'Restore dependencies'
+      run: dotnet restore
+
+    - name: 'Build solution'
+      run: dotnet build --no-restore
+
+    - name: 'Run tests'
+      run: dotnet test --no-restore -l 'console;verbosity=normal'

@@ -9,7 +9,7 @@ The repository contains few samples on how to get started with Testcontainers wi
 
 The samples in the repository depend on the following tools:
 - Docker (required by Testcontainers)
-- Language-specific SDKs (see ["Lanugages"](#languages) below)
+- Language-specific SDKs (see ["Languages"](#languages) below)
 
 ## Languages
 
