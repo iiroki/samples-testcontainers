@@ -1,42 +1,39 @@
 using Samples.Testcontainers.Models;
 using Samples.Testcontainers.Services;
-using Samples.Testcontainers.Tests.Nunit.Helpers;
-using Samples.Testcontainers.Tests.Nunit.Testcontainers;
+using Samples.Testcontainers.Tests.Xunit.Testcontainers;
 
-namespace Samples.Testcontainers.Tests.Nunit.Services;
+namespace Samples.Testcontainers.Tests.XUnit.Services;
 
-[TestFixture]
-public class DbServiceTests : PostgresTestContext
+public sealed class DbServiceTests : IClassFixture<PostgresTestFixture>, IDisposable
 {
-    private DbService _db = null!;
+    private readonly PostgresTestFixture _dbFixture;
+    private readonly DbService _db = null!;
 
-    [SetUp]
-    public async Task SetUpAsync()
+    public DbServiceTests(PostgresTestFixture dbFixture)
     {
-        _db = new DbService(DbUrl);
-        if (!TestContext.CurrentContext.ShouldSkipInit())
-        {
-            await _db.InitAsync();
-        }
+        _dbFixture = dbFixture;
+        _db = new DbService(_dbFixture.DbUrl);
+        _db.InitAsync().Wait(); // Run initialization by default
     }
 
-    [TearDown]
-    public async Task DestroyAsync() => await _db.DisposeAsync();
+    public void Dispose() => _dbFixture.CleanDbAsync().Wait();
 
-    [Test]
-    [SkipInit]
+    [Fact]
     public async Task DbService_Init_Ok()
     {
+        // Arrange
+        await _dbFixture.CleanDbAsync();
+
         // Act
         await _db.InitAsync();
 
         // Assert
-        List<string> tables = await GetTablesAsync();
-        Assert.That(tables, Has.Count.EqualTo(1));
-        Assert.That(tables.First(), Is.EqualTo(_db.Table));
+        List<string> tables = await _dbFixture.GetTablesAsync();
+        Assert.Single(tables);
+        Assert.Equal(_db.Table, tables.First());
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Get_Many_Ok()
     {
         // Arrange
@@ -51,10 +48,10 @@ public class DbServiceTests : PostgresTestContext
         var actual = await _db.GetAsync();
 
         // Assert
-        Assert.That(actual, Is.EquivalentTo(items)); // "Equivalent" = Order doesn't matter
+        Assert.Equivalent(items, actual); // "Equivalent" = Order doesn't matter
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Get_One_Existing_Ok()
     {
         // Arrange
@@ -70,10 +67,10 @@ public class DbServiceTests : PostgresTestContext
         var actual = await _db.GetAsync(expected.Key);
 
         // Assert
-        Assert.That(actual, Is.EqualTo(expected));
+        Assert.Equal(expected, actual);
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Get_One_NonExistent_Ok()
     {
         // Arrange
@@ -88,10 +85,10 @@ public class DbServiceTests : PostgresTestContext
         var actual = await _db.GetAsync(Guid.NewGuid().ToString()); // The key shouldn't match to anything
 
         // Assert
-        Assert.That(actual, Is.Null);
+        Assert.Null(actual);
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Insert_New_Ok()
     {
         // Act
@@ -99,14 +96,29 @@ public class DbServiceTests : PostgresTestContext
         var wasInserted = await _db.InsertAsync(item);
 
         // Assert
-        Assert.That(wasInserted, Is.True);
+        Assert.True(wasInserted);
 
         var actual = await GetActualAsync();
-        Assert.That(actual, Has.Count.EqualTo(1));
-        Assert.That(actual.First(), Is.EqualTo(item));
+        Assert.Single(actual);
+        Assert.Equal(item, actual.First());
     }
 
-    [Test]
+    private async Task<List<Item>> GetActualAsync()
+    {
+        await using var db = _dbFixture.CreateDbSource();
+        var cmd = db.CreateCommand($"SELECT * FROM {_db.Table};");
+        var reader = await cmd.ExecuteReaderAsync();
+
+        List<Item> actual = [];
+        while (await reader.ReadAsync())
+        {
+            actual.Add(new() { Key = reader.GetString(0), Value = reader.GetString(1) });
+        }
+
+        return actual;
+    }
+
+    [Fact]
     public async Task DbService_Insert_Duplicate_Ok()
     {
         // Act
@@ -115,14 +127,10 @@ public class DbServiceTests : PostgresTestContext
         var wasDuplicateInserted = await _db.InsertAsync(item);
 
         // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(wasInserted, Is.True);
-            Assert.That(wasDuplicateInserted, Is.False);
-        });
+        Assert.Multiple(() => Assert.True(wasInserted), () => Assert.False(wasDuplicateInserted));
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Update_Existing_Ok()
     {
         // Arrange
@@ -138,13 +146,13 @@ public class DbServiceTests : PostgresTestContext
         var wasUpdated = await _db.UpdateAsync(updated);
 
         // Assert
-        Assert.That(wasUpdated, Is.True);
+        Assert.True(wasUpdated);
 
         var actual = await GetActualAsync(original.Key);
-        Assert.That(actual, Is.EqualTo(updated));
+        Assert.Equal(updated, actual);
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Update_NonExistent_Ok()
     {
         // Act
@@ -152,13 +160,13 @@ public class DbServiceTests : PostgresTestContext
         var wasUpdated = await _db.UpdateAsync(item);
 
         // Assert
-        Assert.That(wasUpdated, Is.False);
+        Assert.False(wasUpdated);
 
         var actual = await GetActualAsync();
-        Assert.That(actual, Has.Count.EqualTo(0));
+        Assert.Empty(actual);
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Remove_Existing_Ok()
     {
         // Arrange
@@ -169,42 +177,27 @@ public class DbServiceTests : PostgresTestContext
         var wasRemoved = await _db.RemoveAsync(item.Key);
 
         // Assert
-        Assert.That(wasRemoved, Is.True);
+        Assert.True(wasRemoved);
 
         var actual = await GetActualAsync();
-        Assert.That(actual, Has.Count.EqualTo(0));
+        Assert.Empty(actual);
     }
 
-    [Test]
+    [Fact]
     public async Task DbService_Remove_NonExistent_Ok()
     {
         // Act
         var wasRemoved = await _db.RemoveAsync(Guid.NewGuid().ToString());
 
         // Assert
-        Assert.That(wasRemoved, Is.False);
-    }
-
-    private async Task<List<Item>> GetActualAsync()
-    {
-        await using var db = CreateDbSource();
-        var cmd = db.CreateCommand($"SELECT * FROM {_db.Table};");
-        var reader = await cmd.ExecuteReaderAsync();
-
-        List<Item> actual = [];
-        while (await reader.ReadAsync())
-        {
-            actual.Add(new() { Key = reader.GetString(0), Value = reader.GetString(1) });
-        }
-
-        return actual;
+        Assert.False(wasRemoved);
     }
 
     private async Task<Item?> GetActualAsync(string key) => (await GetActualAsync()).FirstOrDefault(i => i.Key == key);
 
     private async Task SeedAsync(IEnumerable<Item> items)
     {
-        await using var db = CreateDbSource();
+        await using var db = _dbFixture.CreateDbSource();
         foreach (var i in items)
         {
             var cmd = db.CreateCommand($"INSERT INTO {_db.Table} VALUES ($1, $2);");

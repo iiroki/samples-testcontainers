@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Testcontainers", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Testcontainers.Tests.Nunit", "Samples.Testcontainers.Tests.Nunit\Samples.Testcontainers.Tests.Nunit.csproj", "{ED0CE98C-D79C-41E4-B6B5-AF02285A4EE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.Testcontainers.Tests.Xunit", "Samples.Testcontainers.Tests.Xunit\Samples.Testcontainers.Tests.Xunit.csproj", "{5DCF31B3-26C0-4631-8B69-136438BF9D1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{ED0CE98C-D79C-41E4-B6B5-AF02285A4EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED0CE98C-D79C-41E4-B6B5-AF02285A4EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED0CE98C-D79C-41E4-B6B5-AF02285A4EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DCF31B3-26C0-4631-8B69-136438BF9D1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DCF31B3-26C0-4631-8B69-136438BF9D1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DCF31B3-26C0-4631-8B69-136438BF9D1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DCF31B3-26C0-4631-8B69-136438BF9D1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

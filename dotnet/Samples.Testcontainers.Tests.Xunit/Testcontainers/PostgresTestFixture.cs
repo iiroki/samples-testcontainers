@@ -2,15 +2,14 @@ using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using Npgsql;
 
-namespace Samples.Testcontainers.Tests.Nunit.Testcontainers;
+namespace Samples.Testcontainers.Tests.Xunit.Testcontainers;
 
-[Category("Postgres")]
-public abstract class PostgresTestContext
+public sealed class PostgresTestFixture : IAsyncLifetime
 {
     private const int PostgresPort = 5432; // 5432 is the default Postgres port
 
-    protected const string DbName = "_testcontainers";
-    protected const string DbPassword = "Passw0rd!";
+    public const string DbName = "_testcontainers";
+    public const string DbPassword = "Passw0rd!";
 
     private readonly IContainer DbContainer = new ContainerBuilder()
         .WithImage("postgres:16")
@@ -20,7 +19,7 @@ public abstract class PostgresTestContext
         .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(PostgresPort))
         .Build();
 
-    protected string DbUrl =>
+    public string DbUrl =>
         string.Join(
             ';',
             $"Host=localhost:{DbContainer.GetMappedPublicPort(PostgresPort)}",
@@ -30,11 +29,9 @@ public abstract class PostgresTestContext
             "Pooling=false"
         );
 
-    [OneTimeSetUp]
-    protected async Task SetUpDbContainerAsync() => await StartDbContainerAsync();
+    public async Task InitializeAsync() => await StartDbContainerAsync();
 
-    [OneTimeTearDown]
-    protected async Task DestroyDbContainerAsync()
+    public async Task DisposeAsync()
     {
         await StopDbContainerAsync();
         await DbContainer.DisposeAsync();
@@ -44,8 +41,7 @@ public abstract class PostgresTestContext
     /// Starts the container if it's not running.
     /// Use this to restart the container in the middle of tests, if needed.
     /// </summary>
-    [SetUp]
-    protected async Task StartDbContainerAsync()
+    public async Task StartDbContainerAsync()
     {
         if (DbContainer.State is TestcontainersStates.Undefined or TestcontainersStates.Paused)
         {
@@ -57,8 +53,7 @@ public abstract class PostgresTestContext
     /// Cleans the database after each test case by dropping all the created tables.
     /// </summary>
     /// <returns></returns>
-    [TearDown]
-    protected async Task CleanDbAsync()
+    public async Task CleanDbAsync()
     {
         var tables = await GetTablesAsync();
 
@@ -74,17 +69,17 @@ public abstract class PostgresTestContext
     /// Stops the DB container.
     /// Use this to stop the container in the middle of tests, if needed.
     /// </summary>
-    protected async Task StopDbContainerAsync() => await DbContainer.StopAsync();
+    public async Task StopDbContainerAsync() => await DbContainer.StopAsync();
 
     /// <summary>
     ///  Creates Npgsql data source that can be used for validation.
     /// </summary>
-    protected NpgsqlDataSource CreateDbSource() => NpgsqlDataSource.Create(DbUrl);
+    public NpgsqlDataSource CreateDbSource() => NpgsqlDataSource.Create(DbUrl);
 
     /// <summary>
     /// Gets table names from the database.
     /// </summary>
-    protected async Task<List<string>> GetTablesAsync()
+    public async Task<List<string>> GetTablesAsync()
     {
         await using var db = CreateDbSource();
         var cmd = db.CreateCommand(

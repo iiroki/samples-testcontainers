@@ -5,12 +5,57 @@ running test dependencies as Docker containers.
 
 The repository contains few samples on how to get started with Testcontainers with various languages.
 
+## Tools
+
+The samples in the repository depend on the following tools:
+- Docker (required by Testcontainers)
+- Language-specific SDKs (see ["Lanugages"](#languages) below)
+
 ## Languages
 
 ### .NET
 
-TODO
+.NET samples are located under [`dotnet/`](./dotnet/).
+
+#### Structure
+
+The sample .NET solution consist of three projects:
+
+- [`Samples.Testcontainers`](./dotnet/Samples.Testcontainers/): The project that's tested
+- [`Samples.Testcontainers.Tests.Nunit`](./dotnet/Samples.Testcontainers.Tests.Nunit/): [NUnit](https://nunit.org/) samples
+- [`Samples.Testcontainers.Tests.Xunit`](./dotnet/Samples.Testcontainers.Tests.Xunit/): [xUnit](https://xunit.net/) samples
+
+Only test projects have references to the tested project, not the other way around!
+
+#### Commands
+
+- Run all tests from the solution:
+    ```bash
+    dotnet test
+    ```
+
+- Run tests from a specific project:
+    ```bash
+    dotnet test <project_name>
+    ```
+
+#### Notes
+
+- The samples utilize `InternalsVisibleToAttribute` to expose internal objects to the test projects,
+  see [`Samples.Testcontainers.csproj`](./dotnet/Samples.Testcontainers/Samples.Testcontainers.csproj) for the usage.
 
 ### Node/TypeScript
 
+Node samples are located under [`node/`](./node/).
+
+#### Structure
+
 TODO
+
+## CI
+
+The repository also demonstrates how to use Testcontainers in CI pipelines with GitHub Actions.
+
+Integration Testcontainers to CI pipelines is as almost as easy it can get,
+since the tests can just be executed with the chosen language's standard test commands
+without any extra configuration!
