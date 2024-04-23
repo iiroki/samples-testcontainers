@@ -58,7 +58,7 @@ TODO
 
 The repository also demonstrates how to use Testcontainers in CI pipelines with GitHub Actions.
 
-Integration Testcontainers to CI pipelines is as almost as easy it can get,
+Integrating Testcontainers to CI pipelines is as almost as easy it can get,
 since the tests can just be executed with the chosen language's standard test commands
 without any extra configuration!
 
