@@ -1,5 +1,7 @@
 # Samples: Testcontainers
 
+[![.NET Test](https://github.com/iiroki/samples-testcontainers/actions/workflows/dotnet-test.yml/badge.svg)](https://github.com/iiroki/samples-testcontainers/actions/workflows/dotnet-test.yml)
+
 [**Testcontainers**](https://testcontainers.com/) is an open source framework for
 running test dependencies as Docker containers.
 
@@ -21,7 +23,7 @@ The samples in the repository depend on the following tools:
 
 The sample .NET solution consist of three projects:
 
-- **[`Samples.Testcontainers`](./dotnet/Samples.Testcontainers/):** The project that's tested
+- **[`Samples.Testcontainers`](./dotnet/Samples.Testcontainers/):** The actual project that's tested
 - **[`Samples.Testcontainers.Tests.Nunit`](./dotnet/Samples.Testcontainers.Tests.Nunit/):** [NUnit](https://nunit.org/) samples
 - **[`Samples.Testcontainers.Tests.Xunit`](./dotnet/Samples.Testcontainers.Tests.Xunit/):** [xUnit](https://xunit.net/) samples
 
