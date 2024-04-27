@@ -17,6 +17,8 @@ The samples in the repository depend on the following tools:
 
 ### .NET
 
+**Version:** .NET 8
+
 .NET samples are located under [`dotnet/`](./dotnet/).
 
 #### Structure
@@ -55,11 +57,20 @@ Only test projects have references to the tested project, not the other way arou
 
 ### Node/TypeScript
 
+**Version:** Node 20
+
 Node samples are located under [`node/`](./node/).
 
 #### Structure
 
-TODO
+The Node project contains a simple Postgres example with Testcontainers.
+
+#### Commands
+
+Run all tests:
+```bash
+npm test
+```
 
 ## CI
 
@@ -72,4 +83,5 @@ without any extra configuration!
 The GitHub Actions CI pipelines are located under [`.github/workflows`](./.github/workflows/):
 - **[`dotnet-test.yml`](./.github/workflows/dotnet-test.yml):** .NET CI pipeline
     - Runs NUnit and xUnit tests separately and then together at the same time.
-- TODO: Node CI
+- **[`node-test.yml`](./.github/workflows/node-test.yml):** Node CI pipeline
+    - Runs tests with Jest.

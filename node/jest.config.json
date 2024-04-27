@@ -1,0 +1,6 @@
+{
+  "testEnvironment": "node",
+  "preset": "ts-jest",
+  "verbose": true,
+  "testTimeout": 60000
+}
