@@ -15,7 +15,7 @@ internal class BlobService(
 
     private readonly BlobServiceClient _service = new(connection, new BlobClientOptions(version));
 
-    public JsonSerializerOptions JsonOptions => InternalJsonOptions;
+    public JsonSerializerOptions JsonOptions { get; } = InternalJsonOptions;
 
     public async Task SaveAsync(string container, Item item, CancellationToken ct = default)
     {

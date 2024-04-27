@@ -24,8 +24,15 @@ The samples in the repository depend on the following tools:
 The sample .NET solution consist of three projects:
 
 - **[`Samples.Testcontainers`](./dotnet/Samples.Testcontainers/):** The actual project that's tested
-- **[`Samples.Testcontainers.Tests.Nunit`](./dotnet/Samples.Testcontainers.Tests.Nunit/):** [NUnit](https://nunit.org/) samples
-- **[`Samples.Testcontainers.Tests.Xunit`](./dotnet/Samples.Testcontainers.Tests.Xunit/):** [xUnit](https://xunit.net/) samples
+- **[`Samples.Testcontainers.Tests.Nunit`](./dotnet/Samples.Testcontainers.Tests.Nunit/):**
+  [NUnit](https://nunit.org/) samples:
+    - Postgres
+- **[`Samples.Testcontainers.Tests.Xunit`](./dotnet/Samples.Testcontainers.Tests.Xunit/):**
+  [xUnit](https://xunit.net/) samples:
+    - Postgres
+    - Blob Storage (= Azurite)
+    - Postgres + Blob Storage (both used at the same time)
+
 
 Only test projects have references to the tested project, not the other way around!
 
@@ -64,4 +71,5 @@ without any extra configuration!
 
 The GitHub Actions CI pipelines are located under [`.github/workflows`](./.github/workflows/):
 - **[`dotnet-test.yml`](./.github/workflows/dotnet-test.yml):** .NET CI pipeline
+    - Runs NUnit and xUnit tests separately and then together at the same time.
 - TODO: Node CI

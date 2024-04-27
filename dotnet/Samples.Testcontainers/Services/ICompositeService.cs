@@ -10,6 +10,8 @@ namespace Samples.Testcontainers.Services;
 /// </summary>
 public interface ICompositeService
 {
+    string Container { get; }
+
     /// <summary>
     /// Saves the item to database and Blob Storage.
     /// </summary>

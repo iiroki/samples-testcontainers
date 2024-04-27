@@ -25,5 +25,11 @@ jobs:
     - name: 'Build solution'
       run: dotnet build --no-restore
 
-    - name: 'Run tests'
+    - name: 'Run tests - NUnit'
+      run: dotnet test --no-restore -l 'console;verbosity=normal' Samples.Testcontainers.Tests.Nunit
+
+    - name: 'Run tests - xUnit'
+      run: dotnet test --no-restore -l 'console;verbosity=normal' Samples.Testcontainers.Tests.Xunit
+
+    - name: 'Run tests - All'
       run: dotnet test --no-restore -l 'console;verbosity=normal'
