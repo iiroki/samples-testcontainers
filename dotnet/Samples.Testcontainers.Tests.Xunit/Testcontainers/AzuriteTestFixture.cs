@@ -6,7 +6,7 @@ using Samples.Testcontainers.Extensions;
 
 namespace Samples.Testcontainers.Tests.Xunit.Testcontainers;
 
-public sealed class AzuriteTestFixture : TestcontainersFixture
+public sealed class AzuriteTestFixture : TestcontainersFixtureBase
 {
     private const string AzuriteVersion = "3.30.0"; // = Docker tag
     private const int BlobPort = 10000; // 10000 is the default Blob Storage port

@@ -4,7 +4,7 @@ using Npgsql;
 
 namespace Samples.Testcontainers.Tests.Xunit.Testcontainers;
 
-public sealed class PostgresTestFixture : TestcontainersFixture
+public sealed class PostgresTestFixture : TestcontainersFixtureBase
 {
     private const int PostgresPort = 5432; // 5432 is the default Postgres port
 

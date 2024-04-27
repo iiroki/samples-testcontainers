@@ -2,11 +2,11 @@ using DotNet.Testcontainers.Containers;
 
 namespace Samples.Testcontainers.Tests.Xunit.Testcontainers;
 
-public abstract class TestcontainersFixture : IAsyncLifetime
+public abstract class TestcontainersFixtureBase : IAsyncLifetime
 {
     protected readonly IContainer Container;
 
-    protected TestcontainersFixture()
+    protected TestcontainersFixtureBase()
     {
         Container = CreateContainer();
     }
