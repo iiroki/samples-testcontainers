@@ -1,4 +1,4 @@
-import { GenericContainer, StartedTestContainer, TestContainer } from 'testcontainers'
+import { GenericContainer, StartedTestContainer } from 'testcontainers'
 import { TestcontainersLifeCycle } from './model'
 import { Client } from 'pg'
 
@@ -46,11 +46,11 @@ export class PostgresTestContext implements TestcontainersLifeCycle {
     return new Client({ connectionString: this.connection })
   }
 
-  async getTables(client?: Client) {
-    const useOneShotClient = !client
-    const usedClient = useOneShotClient ? this.getClient() : client
+  async getTables(externalClient?: Client) {
+    const useOneShotClient = !externalClient
+    const client = useOneShotClient ? this.getClient() : externalClient
     if (useOneShotClient) {
-      await usedClient.connect()
+      await client.connect()
     }
 
     var query = `
@@ -59,10 +59,10 @@ export class PostgresTestContext implements TestcontainersLifeCycle {
       WHERE schemaname != 'pg_catalog' AND  schemaname != 'information_schema';
     `
 
-    var res = await usedClient.query(query)
+    var res = await client.query(query)
 
     if (useOneShotClient) {
-      await usedClient.end()
+      await client.end()
     }
 
     return res.rows.map(r => r.tablename)

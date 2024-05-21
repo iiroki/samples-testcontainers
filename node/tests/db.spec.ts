@@ -31,9 +31,31 @@ describe('Database tests', () => {
       expect(tables.length).toBeGreaterThan(0)
     })
 
-    // TODO: Get test
+    it('Get items', async () => {
+      // Arrange
+      await service.migrate()
 
-    it('Item can be inserted', async () => {
+      const now = new Date()
+      const expected: Item[] = [...Array(10).keys()].map(i => ({
+        key: `KEY_${i}`,
+        value: `VALUE_${i}`,
+        timestamp: (() => {
+          const now = new Date()
+          now.setMinutes((now.getMinutes() + i) % 59)
+          return now
+        })()
+      }))
+
+      await Promise.all(expected.map(i => service.insert(i)))
+
+      // Act
+      const actual = await service.get()
+
+      // Assert
+      expect(actual).toStrictEqual(expected)
+    })
+
+    it('Insert an item', async () => {
       // Arrange
       await service.migrate()
       expect(await service.get()).toHaveLength(0)
@@ -42,7 +64,7 @@ describe('Database tests', () => {
       const item: Item = {
         key: uuid(),
         value: 'inserted',
-        timestamp: new Date
+        timestamp: new Date()
       }
 
       const wasInserted = await service.insert(item)
